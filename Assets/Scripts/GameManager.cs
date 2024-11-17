@@ -7,14 +7,14 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-
     public GameObject player;
     public GameObject enemyOne;
     public GameObject cloud;
     public GameObject powerup;
-
+    public GameObject coinPrefab;  
     public AudioClip powerUp;
     public AudioClip powerDown;
+    public AudioClip coinPickupSound;  
 
     public int cloudSpeed;
 
@@ -27,23 +27,33 @@ public class GameManager : MonoBehaviour
 
     private int score;
 
-    // Start is called before the first frame update
+    private CoinSpawner coinSpawner;  
+
+    
     void Start()
     {
         Instantiate(player, transform.position, Quaternion.identity);
         InvokeRepeating("CreateEnemyOne", 1f, 3f);
         StartCoroutine(CreatePowerup());
         CreateSky();
+
         score = 0;
         scoreText.text = "Score: " + score;
+
         isPlayerAlive = true;
         cloudSpeed = 1;
+
+       
+        coinSpawner = gameObject.AddComponent<CoinSpawner>();
+        coinSpawner.coinPrefab = coinPrefab;
+        coinSpawner.coinPickupSound = coinPickupSound;
+        coinSpawner.StartCoinSpawning();
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
-        Restart();   
+        Restart();
     }
 
     void CreateEnemyOne()
@@ -68,7 +78,7 @@ public class GameManager : MonoBehaviour
 
     public void EarnScore(int newScore)
     {
-        score = score + newScore;
+        score += newScore;
         scoreText.text = "Score: " + score;
     }
 
@@ -83,7 +93,7 @@ public class GameManager : MonoBehaviour
 
     void Restart()
     {
-        if(Input.GetKeyDown(KeyCode.R) && isPlayerAlive == false)
+        if (Input.GetKeyDown(KeyCode.R) && !isPlayerAlive)
         {
             SceneManager.LoadScene("Game");
         }
@@ -103,4 +113,6 @@ public class GameManager : MonoBehaviour
     {
         AudioSource.PlayClipAtPoint(powerDown, Camera.main.transform.position);
     }
+
+
 }

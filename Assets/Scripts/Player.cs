@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
     private float horizontalScreenSize = 11.5f;
     private float verticalScreenSize = 7.5f;
     private float speed;
-    private int lives;
+    public int lives;
     private int shooting;
     private bool hasShield;
 
@@ -42,14 +42,21 @@ public class Player : MonoBehaviour
     {
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
-        transform.Translate(new Vector3(horizontalInput, verticalInput,0) * Time.deltaTime * speed);
-        if (transform.position.x > horizontalScreenSize || transform.position.x <= -horizontalScreenSize)
+
+        
+        float newYPosition = Mathf.Clamp(transform.position.y + verticalInput * Time.deltaTime * speed, -verticalScreenSize, 0);
+
+        
+        transform.position = new Vector3(transform.position.x + horizontalInput * Time.deltaTime * speed, newYPosition, 0);
+
+        
+        if (transform.position.x > horizontalScreenSize)
         {
-            transform.position = new Vector3(transform.position.x * -1, transform.position.y, 0);
+            transform.position = new Vector3(-horizontalScreenSize, transform.position.y, 0);
         }
-        if (transform.position.y > verticalScreenSize || transform.position.y < -verticalScreenSize)
+        else if (transform.position.x < -horizontalScreenSize)
         {
-            transform.position = new Vector3(transform.position.x, transform.position.y * -1, 0);
+            transform.position = new Vector3(horizontalScreenSize, transform.position.y, 0);
         }
     }
 
@@ -100,6 +107,7 @@ public class Player : MonoBehaviour
         speed = 6f;
         thruster.gameObject.SetActive(false);
         gameManager.UpdatePowerupText("");
+        gameManager.PlayPowerDown();
     }
 
     IEnumerator ShootingPowerDown()
@@ -107,6 +115,7 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(3f);
         shooting = 1;
         gameManager.UpdatePowerupText("");
+        gameManager.PlayPowerDown();
     }
 
     private void OnTriggerEnter2D(Collider2D whatIHit)
@@ -145,4 +154,5 @@ public class Player : MonoBehaviour
             Destroy(whatIHit.gameObject);
         }
     }
+
 }
