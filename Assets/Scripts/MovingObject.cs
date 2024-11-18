@@ -7,6 +7,7 @@ public class MovingObject : MonoBehaviour
 
     public int whatAmI;
     private GameManager gameManager;
+    private int reverse = 1;
 
     
     void Start()
@@ -33,6 +34,10 @@ public class MovingObject : MonoBehaviour
         {
             
             transform.Translate(new Vector3(0, -1, 0) * Time.deltaTime * 6f);
+        } else if (whatAmI == 5)
+        {
+            
+            transform.Translate(new Vector3(1 * reverse, 1, 0) * Time.deltaTime * 3f);
         }
 
         if ((transform.position.y > 9f || transform.position.y <= -9f) && whatAmI != 3)
@@ -43,6 +48,14 @@ public class MovingObject : MonoBehaviour
         if (transform.position.y <= -9f && whatAmI == 3)
         {
             transform.position = new Vector3(Random.Range(-12f, 12f), 9f, 0);
+        }
+        
+         if (whatAmI == 5 && transform.position.x > 11.5)
+        {
+            reverse *= -1;
+        } else if (whatAmI == 5 && transform.position.x < -11.5)
+        {
+            reverse *= -1;
         }
     }
 }

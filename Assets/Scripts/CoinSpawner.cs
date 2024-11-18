@@ -18,7 +18,7 @@ public class CoinSpawner : MonoBehaviour
     {
         
         float randomX = Random.Range(-9f, 9f);
-        float randomY = Random.Range(-4f, 4f);
+        float randomY = Random.Range(4f, 7f);
 
         
         GameObject coin = Instantiate(coinPrefab, new Vector3(randomX, randomY, 0), Quaternion.identity);
